@@ -136,16 +136,19 @@
                         page.appendChild(contentDom);
                         page.appendChild(Object.assign(document.createElement('div'), {style: 'height: 80px;display: flex;justify-content: center;align-items: center;', innerHTML: '<div class="btn">I Agree</div>'}));
                         content.split('\n').map(item=>contentDom.appendChild(Object.assign(document.createElement('div'), {className: 'text', innerHTML: item.trim()})));
-                        document.querySelector('.btn').addEventListener('click', function () {
-                            if (window.Android && window.Android.agree) {
-                                window.Android.agree();
-                            } else if (window.NativeApp && window.NativeApp.closeWebView) {
-                                window.NativeApp.closeWebView()
-                            } else {
-                                try { uni.webView.redirectTo({url:'/pages/index/index'}); } catch (e) {}
-                                window.location.href = BASE_URL + '/index.html';
-                            }
-                        })
+                        if (window.Android || window.NativeApp)
+                            document.querySelector('.btn').addEventListener('click', function () {
+                                if (window.Android && window.Android.agree) {
+                                    window.Android.agree();
+                                } else if (window.NativeApp && window.NativeApp.closeWebView) {
+                                    window.NativeApp.closeWebView()
+                                } else {
+                                    try { uni.webView.redirectTo({url:'/pages/index/index'}); } catch (e) {}
+                                    window.location.href = BASE_URL + '/index.html';
+                                }
+                            })
+                        else
+                            document.querySelector('.btn').remove();
                     }) ()
             });
         }
